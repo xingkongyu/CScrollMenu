@@ -31,7 +31,7 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
     var currentPosition: Int = 0
         private set
 
-    private val mTitleOffset: Int
+    private var mTitleOffset: Int
 
     private var mTabViewLayoutId: Int = 0
     private var mTabViewTextViewId: Int = 0
@@ -119,6 +119,12 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
         mTabStrip.setCustomTabColorizer(tabColorizer)
     }
 
+
+    fun setPositionOffset(offset: Int) {
+        TITLE_OFFSET_DIPS = offset
+        mTitleOffset = (TITLE_OFFSET_DIPS * resources.displayMetrics.density).toInt()
+    }
+
     /**
      * 设置菜单是否横向铺开展示（适用于菜单数据比较少，不足以铺满整个横屏的情况）
      */
@@ -131,6 +137,14 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
      */
     fun setIsSeletedBlod(isSeletedBlod: Boolean) {
         this.isSeletedBlod = isSeletedBlod
+    }
+
+    fun setInnerGravity(gravity: Int) {
+        mTabStrip.gravity = if (gravity == null || gravity == 0) {
+            Gravity.LEFT
+        } else {
+            gravity
+        }
     }
 
     /**
@@ -276,7 +290,7 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
      * 设置菜单条目字体大小和颜色
      */
     private fun setTxtSizeColor(tabTitleView: TextView, position: Int, b: Boolean) {
-        if(menus==null)return
+        if (menus == null) return
         if (b) {
             tabTitleView.setTextColor(resources.getColor(menus!![position].selected_color))
             tabTitleView.textSize = menus!![position].selectedSize
@@ -295,21 +309,20 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
      * @param b 是否选中状态
      */
     private fun setDrawbleLeft(tabTitleView: TextView, position: Int, b: Boolean) {
-        if (menus!![position].normal_icon != 0&&menus!![position].selected_icon!=0) {
+        if (menus!![position].normal_icon != 0 && menus!![position].selected_icon != 0) {
             val drawable = resources.getDrawable(if (b) menus!![position].selected_icon else menus!![position].normal_icon)
-            set2DrawbleLeft(tabTitleView, drawable)
-        }
-        if (!TextUtils.isEmpty(menus!![position].normal_net_icon) && !TextUtils.isEmpty(menus!![position].selected_net_icon)) {
+            set2Drawble(tabTitleView, drawable, position)
+        } else if (!TextUtils.isEmpty(menus!![position].normal_net_icon) && !TextUtils.isEmpty(menus!![position].selected_net_icon)) {
             ImageLoader.get().loadImageByUri(context, if (b) menus!![position].selected_net_icon else menus!![position].normal_net_icon, object : SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>) {
                     val drawable = BitmapDrawable(resource)
-                    set2DrawbleLeft(tabTitleView, drawable)
+                    set2Drawble(tabTitleView, drawable, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, errorDrawable: Drawable?) {
                     super.onLoadFailed(e, errorDrawable)
                     val drawable = resources.getDrawable(R.drawable.default_pic)
-                    set2DrawbleLeft(tabTitleView, drawable)
+                    set2Drawble(tabTitleView, drawable, position)
                 }
             })
         }
@@ -318,11 +331,17 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
     /**
      * 将图片添加到textview上
      */
-    private fun set2DrawbleLeft(tabTitleView: TextView, drawable: Drawable) {
+    private fun set2Drawble(tabTitleView: TextView, drawable: Drawable, position: Int) {
         // 这一步必须要做,否则不会显示.
         drawable.setBounds(0, 0, 40, ((drawable.minimumHeight.toFloat() / drawable.minimumWidth) * 40).toInt())
 //        drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-        tabTitleView.setCompoundDrawables(drawable, null, null, null)
+        when (menus!![position].drawable_position) {
+            DRAWABLE_LEFT -> tabTitleView.setCompoundDrawables(drawable, null, null, null)
+            DRAWABLE_TOP -> tabTitleView.setCompoundDrawables(null, drawable, null, null)
+            DRAWABLE_RIGHT -> tabTitleView.setCompoundDrawables(null, null, drawable, null)
+            DRAWABLE_BOTTOM -> tabTitleView.setCompoundDrawables(null, null, null, drawable)
+            else -> tabTitleView.setCompoundDrawables(drawable, null, null, null)
+        }
         tabTitleView.compoundDrawablePadding = (5 * resources.displayMetrics.density).toInt()
     }
 
@@ -382,7 +401,7 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val tabStripChildCount = mTabStrip.childCount
-            if (tabStripChildCount == 0 || position < 0 || position >= tabStripChildCount)return
+            if (tabStripChildCount == 0 || position < 0 || position >= tabStripChildCount) return
 
             mTabStrip.onViewPagerPageChanged(position, positionOffset)
 
@@ -454,15 +473,15 @@ class XSlidingTabLayout(context: Context?, attrs: AttributeSet?, defStyle: Int) 
     companion object {
 
         /**标题栏偏移量*/
-        private val TITLE_OFFSET_DIPS = 24
+        private var TITLE_OFFSET_DIPS = 100
         /**标题padding量*/
         private val TAB_VIEW_PADDING_DIPS = 8
         /**标题字体大小*/
         private val TAB_VIEW_TEXT_SIZE_SP = 13
-        val DRAWBLE_LEFT = 0
-        val DRAWBLE_TOP = 1
-        val DRAWBLE_RIGHT = 2
-        val DRAWBLE_BOTTOM = 3
+        val DRAWABLE_LEFT = 0
+        val DRAWABLE_TOP = 1
+        val DRAWABLE_RIGHT = 2
+        val DRAWABLE_BOTTOM = 3
     }
 
 

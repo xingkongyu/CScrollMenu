@@ -9,6 +9,7 @@ import java.io.Serializable
  */
 class XMenuModel(var title: String = "",
                  var position: Int = 0,
+                 var drawable_position:Int = XSlidingTabLayout.DRAWABLE_LEFT,
                  var normal_icon: Int = 0,
                  var selected_icon: Int = 0,
                  var normal_net_icon: String = "",

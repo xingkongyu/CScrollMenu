@@ -1,6 +1,8 @@
 # CScrollMenu
 开源控件——导航菜单
 
+###### 简书: [https://www.jianshu.com/p/b9f0077bd237](https://www.jianshu.com/p/b9f0077bd237)
+
 控件名称：XSlidingLayout
 -------------------
 - 可以设置是否关联viewpager
@@ -48,5 +50,19 @@ xsliding.setMenus(mens, object : XSlidingTabLayout.OnClickPositionBack {
 ```
 xsliding.setInnerGravity(Gravity.LEFT)
 ```
+相关效果如下：
+![SVID_20180720_104245.gif](https://upload-images.jianshu.io/upload_images/6206982-dd69a205c9ec0c49.gif?imageMogr2/auto-orient/strip)
+![SVID_20180720_104322.gif](https://upload-images.jianshu.io/upload_images/6206982-2bfb4dc058f40990.gif?imageMogr2/auto-orient/strip)
+
+![SVID_20180720_104352.gif](https://upload-images.jianshu.io/upload_images/6206982-8ab3059db8faf1a3.gif?imageMogr2/auto-orient/strip)
+
+![SVID_20180720_104411.gif](https://upload-images.jianshu.io/upload_images/6206982-79e15ec6f44538ff.gif?imageMogr2/auto-orient/strip)
+
+![SVID_20180720_104436.gif](https://upload-images.jianshu.io/upload_images/6206982-91b1fbad9b26142f.gif?imageMogr2/auto-orient/strip)
+
+![SVID_20180720_104705.gif](https://upload-images.jianshu.io/upload_images/6206982-64d63b005593beaf.gif?imageMogr2/auto-orient/strip)
+
+![SVID_20180720_104730.gif](https://upload-images.jianshu.io/upload_images/6206982-993a0289b6c6f295.gif?imageMogr2/auto-orient/strip)
+
 
 
